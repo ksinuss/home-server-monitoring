@@ -1,7 +1,7 @@
 # Home SRE Monitoring Project
 
 [![Prometheus Status](https://img.shields.io/badge/prometheus-active-success)]()
-[![Node Exporter](https://img.shields.io/badge/node_exporter-1.7.0-blue)]()
+[![Node Exporter](https://img.shields.io/badge/node_exporter-1.9.1-blue)]()
 
 ## Технологический стек
 - **ОС:** Ubuntu Server 24.04.2 LTS

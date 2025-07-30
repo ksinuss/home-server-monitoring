@@ -1,2 +1,5 @@
-# home-server-monitoring
-Implementation of an SRE stack for monitoring a home server after a hardware failure
+# Home SRE Monitoring Project
+
+## Технологический стек
+- **ОС:** Ubuntu Server 24.04.2 LTS
+- **Сеть:** Netplan, iwd

@@ -1,8 +1,13 @@
 # Home SRE Monitoring Project
 
+[![Prometheus Status](https://img.shields.io/badge/prometheus-active-success)]()
+[![Node Exporter](https://img.shields.io/badge/node_exporter-1.7.0-blue)]()
+
 ## Технологический стек
 - **ОС:** Ubuntu Server 24.04.2 LTS
 - **Сеть:** Netplan, iwd
+- **Мониторинг:** Prometheus 3.5.0, Node Exporter 1.9.1
+
 
 ## Установка с поддержкой версий
 
@@ -36,3 +41,8 @@ cd ../node-exporter
 # Node Exporter v1.5.0
 ./install-node-exporter.sh 1.5.0
 ```
+
+## Основные функции
+- Сбор системных метрик (CPU, RAM, Disk, Network)
+- Мониторинг состояния сервера в реальном времени
+- Готовые конфиги для быстрого развертывания

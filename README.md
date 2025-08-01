@@ -1,13 +1,21 @@
 # Home SRE Monitoring Project
 
-[![Prometheus Status](https://img.shields.io/badge/prometheus-active-success)]()
-[![Node Exporter](https://img.shields.io/badge/node_exporter-1.9.1-blue)]()
+[![Prometheus](https://img.shields.io/badge/Prometheus-3.5.0-E6522C?logo=prometheus&logoColor=white&style=flat-square)](https://prometheus.io)
+[![Node Exporter](https://img.shields.io/badge/Node_Exporter-1.9.1-7FBF3F?style=flat-square)]()
 [![Grafana](https://img.shields.io/badge/Grafana-F2F4F9?style=for-the-badge&logo=grafana&logoColor=orange&labelColor=F2F4F9)](https://grafana.com)
 
 ## Технологический стек
-- **ОС:** Ubuntu Server 24.04.2 LTS
-- **Сеть:** Netplan, iwd
-- **Мониторинг:** Prometheus 3.5.0, Node Exporter 1.9.1
+| Категория       | Технологии/Компоненты               |
+|-----------------|-------------------------------------|
+| **ОС**          | Ubuntu Server 24.04.2 LTS           |
+| **Сеть**        | Netplan, iwd                        |
+| **Мониторинг**  | Prometheus 3.5.0, Node Exporter 1.9.1 |
+| **Визуализация**| Grafana 10.4.1 с поддержкой:        |
+|                 | - Prometheus Data Source            |
+|                 | - Пользовательские дашборды         |
+|                 | - Импорт дашбордов (ID 1860)        |
+| **Аналитика**   | PromQL запросы                      |
+| **Управление**  | Systemd, Grafana CLI, SQLite        |
 
 
 ## Установка Prometheus & Grafana с поддержкой версий

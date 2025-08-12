@@ -1,0 +1,4 @@
+# Ignore sensitive files
+inventories/production/hosts.ini
+*.retry
+*.secret

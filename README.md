@@ -7,15 +7,16 @@
 ## Технологический стек
 | Категория       | Технологии/Компоненты               |
 |-----------------|-------------------------------------|
-| **ОС**          | Ubuntu Server 24.04.2 LTS           |
-| **Сеть**        | Netplan, iwd                        |
-| **Мониторинг**  | Prometheus 3.5.0, Node Exporter 1.9.1 |
-| **Визуализация**| Grafana 10.4.1 с поддержкой:        |
-|                 | - Prometheus Data Source            |
-|                 | - Пользовательские дашборды         |
-|                 | - Импорт дашбордов (ID 1860)        |
-| **Аналитика**   | PromQL запросы                      |
-| **Управление**  | Systemd, Grafana CLI, SQLite        |
+| **ОС**            | Ubuntu Server 24.04.2 LTS             |
+| **Сеть**          | Netplan, iwd                          |
+| **Мониторинг**    | Prometheus 3.5.0, Node Exporter 1.9.1 |
+| **Визуализация**  | Grafana 10.4.1 с поддержкой:        
+                      Prometheus Data Source              
+                      Пользовательские дашборды           
+                      Импорт дашбордов (ID 1860)            |
+| **Аналитика**     | PromQL запросы                        |
+| **Управление**    | Systemd, Grafana CLI, SQLite          |
+| **Автоматизация** | Ansible                               |
 
 
 ## Установка Prometheus & Grafana с поддержкой версий
@@ -96,4 +97,37 @@ sudo apt install -y sqlite3
 mkdir -p ~/grafana-export
 
 for uid in $(sqlite3 ~/grafana-backup.db "SELECT uid FROM dashboard"); do data=$(sqlite3 ~/grafana-backup.db "SELECT data FROM dashboard WHERE uid = '$uid'"); echo "$data" > ~/grafana-export/"${uid}".json; done
+```
+
+
+## Автоматизация базовой настройки серверов с помощью Ansible
+
+Реализована инфраструктура как код для автоматической настройки:
+- Базовой конфигурации Ubuntu серверов
+- Установки необходимых пакетов
+- Настройки безопасности SSH
+- Обновления системы
+
+### Компоненты:
+1. Роль `base_setup`:
+   - Установка базовых пакетов (htop, net-tools, curl и др.)
+   - Настройка часового пояса (Europe/Moscow)
+   - Конфигурация SSH (отключение парольной аутентификации)
+   - Добавление SSH-ключа для доступа
+   - Обновление всех пакетов системы
+
+2. Структура проекта:
+   - Инвентарь в формате INI
+   - Разделение на роли и плейбуки
+   - Централизованное управление переменными
+
+### Установка
+```bash
+cd ansible-home-automation
+
+# Установить зависимости
+sudo apt install -y ansible sshpass
+
+# Выполнить плейбук
+ansible-playbook playbooks/site.yml -K
 ```

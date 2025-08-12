@@ -10,11 +10,8 @@
 | **ОС**            | Ubuntu Server 24.04.2 LTS             |
 | **Сеть**          | Netplan, iwd                          |
 | **Мониторинг**    | Prometheus 3.5.0, Node Exporter 1.9.1 |
-| **Визуализация**  | Grafana 10.4.1 с поддержкой:        
-                      Prometheus Data Source              
-                      Пользовательские дашборды           
-                      Импорт дашбордов (ID 1860)            |
-| **Аналитика**     | PromQL запросы                        |
+| **Визуализация**  | Grafana 10.4.1                        |
+| **Аналитика**     | PromQL-запросы                        |
 | **Управление**    | Systemd, Grafana CLI, SQLite          |
 | **Автоматизация** | Ansible                               |
 

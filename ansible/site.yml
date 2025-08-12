@@ -1,0 +1,4 @@
+- name: Apply base configuration
+  hosts: home_servers
+  roles:
+    - base_setup

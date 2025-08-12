@@ -1,0 +1,54 @@
+---
+- name: Create prometheus user
+  user:
+    name: prometheus
+    system: yes
+    shell: /usr/sbin/nologin
+
+- name: Download Prometheus
+  get_url:
+    url: "https://github.com/prometheus/prometheus/releases/download/v2.47.0/prometheus-2.47.0.linux-amd64.tar.gz"
+    dest: /tmp/prometheus.tar.gz
+
+- name: Extract Prometheus
+  unarchive:
+    src: /tmp/prometheus.tar.gz
+    dest: /opt
+    remote_src: yes
+
+- name: Create symlink for Prometheus
+  file:
+    src: /opt/prometheus-2.47.0.linux-amd64
+    dest: /opt/prometheus
+    state: link
+
+- name: Install Prometheus systemd service
+  template:
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service
+  notify:
+    - Reload systemd
+    - Start Prometheus
+
+- name: Ensure Grafana GPG key is installed
+  apt_key:
+    url: https://packages.grafana.com/gpg.key
+    state: present
+
+- name: Add Grafana repository
+  apt_repository:
+    repo: "deb https://packages.grafana.com/oss/deb stable main"
+    state: present
+    filename: grafana
+
+- name: Install Grafana
+  apt:
+    name: grafana
+    state: latest
+    update_cache: yes
+
+- name: Start and enable Grafana service
+  service:
+    name: grafana-server
+    state: started
+    enabled: yes

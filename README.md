@@ -1,8 +1,9 @@
 # Home SRE Monitoring Project
 
-[![Prometheus](https://img.shields.io/badge/Prometheus-3.5.0-E6522C?logo=prometheus&logoColor=white&style=flat-square)](https://prometheus.io)
-[![Node Exporter](https://img.shields.io/badge/Node_Exporter-1.9.1-7FBF3F?style=flat-square)]()
-[![Grafana](https://img.shields.io/badge/Grafana-F2F4F9?style=for-the-badge&logo=grafana&logoColor=orange&labelColor=F2F4F9)](https://grafana.com)
+[![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)](https://prometheus.io/)
+[![Node Exporter](https://img.shields.io/badge/Node_Exporter-FDBC02?style=for-the-badge&logo=prometheus&logoColor=white)](https://github.com/prometheus/node_exporter)
+[![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=F46800&color=white)](https://grafana.com)
+[![Ansible](https://img.shields.io/badge/Ansible-EE0000?style=for-the-badge&logo=ansible&logoColor=white)](https://www.ansible.com/)
 
 ## Технологический стек
 | Категория       | Технологии/Компоненты               |
@@ -13,7 +14,7 @@
 | **Визуализация**  | Grafana 10.4.1                        |
 | **Аналитика**     | PromQL-запросы                        |
 | **Управление**    | Systemd, Grafana CLI, SQLite          |
-| **Автоматизация** | Ansible                               |
+| **Автоматизация** | Ansible 2.18.7                        |
 
 
 ## Установка Prometheus & Grafana с поддержкой версий

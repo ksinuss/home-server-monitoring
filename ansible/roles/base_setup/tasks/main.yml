@@ -1,0 +1,10 @@
+- name: Install essential packages
+  apt:
+    name:
+      - htop
+      - net-tools
+      - curl
+      - git
+      - tmux
+      - tree
+    state: present

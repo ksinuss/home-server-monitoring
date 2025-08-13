@@ -1,10 +1,47 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
 - name: Install essential packages
   apt:
-    name:
-      - htop
-      - net-tools
-      - curl
-      - git
-      - tmux
-      - tree
+    name: "{{ essential_packages }}"
     state: present
+
+- name: Set timezone to {{ timezone }}
+  timezone:
+    name: "{{ timezone }}"
+
+- name: Ensure .ssh directory exists
+  file:
+    path: "{{ ansible_user_dir }}/.ssh"
+    state: directory
+    mode: 0700
+
+- name: Ensure authorized_keys exists
+  file:
+    path: "{{ ansible_user_dir }}/.ssh/authorized_keys"
+    state: touch
+    mode: 0600
+
+- name: Add SSH public key
+  become: false
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_user_dir }}/.ssh/authorized_keys"
+    line: "{{ lookup('file', ssh_key_path) }}"
+    state: present
+    create: yes
+
+- name: Disable password authentication
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: "PasswordAuthentication no"
+    state: present
+  notify: Restart SSH
+
+- name: Update all packages
+  apt:
+    upgrade: dist
+    update_cache: yes

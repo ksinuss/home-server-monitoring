@@ -1,5 +1,6 @@
 [Unit]
 Description=Prometheus Monitoring System
+Documentation=https://prometheus.io/docs/introduction/overview/
 After=network.target
 
 [Service]
@@ -7,9 +8,14 @@ User=prometheus
 Group=prometheus
 Type=simple
 ExecStart=/opt/prometheus/prometheus \
-  --config.file /etc/prometheus/prometheus.yml \
-  --storage.tsdb.path /var/lib/prometheus/
+  --config.file=/etc/prometheus/prometheus.yml \
+  --storage.tsdb.path=/var/lib/prometheus \
+  --web.console.templates=/opt/prometheus/consoles \
+  --web.console.libraries=/opt/prometheus/console_libraries
 Restart=always
+RestartSec=3
+LimitNOFILE=65536
+EnvironmentFile=-/etc/default/prometheus
 
 [Install]
 WantedBy=multi-user.target

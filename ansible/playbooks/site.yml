@@ -1,0 +1,12 @@
+---
+- name: Apply base configuration to home servers
+  hosts: home_servers
+  gather_facts: yes
+  roles:
+    - base_setup
+
+- name: Install monitoring stack
+  hosts: home_servers
+  roles:
+    - monitoring_setup
+  tags: monitoring

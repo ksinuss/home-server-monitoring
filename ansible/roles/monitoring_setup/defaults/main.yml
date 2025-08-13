@@ -1,0 +1,13 @@
+---
+# default versions
+prometheus_version: "2.51.2"
+node_exporter_version: "1.7.0"
+grafana_version: ""
+
+# checksums
+prometheus_checksum: ""
+node_exporter_checksum: ""
+
+# settings
+prometheus_data_dir: "/var/lib/prometheus"
+prometheus_config_dir: "/etc/prometheus"

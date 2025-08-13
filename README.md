@@ -118,14 +118,15 @@ for uid in $(sqlite3 ~/grafana-backup.db "SELECT uid FROM dashboard"); do data=$
    - Инвентарь в формате INI
    - Разделение на роли и плейбуки
    - Централизованное управление переменными
+   - Все чувствительные данные хранятся локально
 
 ### Установка
+#### 1. Запустите интерактивную настройку
 ```bash
-cd ansible-home-automation
+./setup.sh
+```
 
-# Установить зависимости
-sudo apt install -y ansible sshpass
-
-# Выполнить плейбук
+#### 2. Запустите плейбук
+```bash
 ansible-playbook playbooks/site.yml -K
 ```

@@ -1,0 +1,10 @@
+[home_servers]
+# Replace with your server details
+# Format: <server-name> ansible_host=<ip-address>
+home-server ansible_host=192.168.1.100
+
+[home_servers:vars]
+# Variables will be auto-generated in group_vars/home_servers.yml
+# ansible_user: your_username
+# server_ip: your_server_ip
+# ssh_key_path: ~/.ssh/your_key

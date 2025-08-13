@@ -1,9 +1,0 @@
----
-timezone: Europe/Moscow
-essential_packages:
-  - htop
-  - net-tools
-  - curl
-  - git
-  - tmux
-  - tree

@@ -1,22 +1,33 @@
 ---
-- name: Install prerequisites
+- name: Install dependencies
   apt:
     name:
       - wget
       - gnupg
+      - software-properties-common
     state: present
 
-- name: Add Prometheus user
-  user:
-    name: prometheus
-    system: yes
-    shell: /usr/sbin/nologin
+- name: Set actual version for 'latest'
+  block:
+    - name: Get latest Prometheus version
+      uri:
+        url: "https://api.github.com/repos/prometheus/prometheus/releases/latest"
+        return_content: yes
+      register: prometheus_release
+      when: prometheus_version == 'latest'
 
-- name: Download Prometheus v{{ prometheus_version }}
+    - name: Extract latest version tag
+      set_fact:
+        prometheus_version: "{{ prometheus_release.json.tag_name | default(prometheus_version) | regex_replace('^v', '') }}"
+      when: prometheus_version == 'latest'
+  
+  when: prometheus_version == 'latest'
+
+- name: Download Prometheus
   get_url:
     url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
     dest: /tmp/prometheus.tar.gz
-    checksum: "sha256:{{ prometheus_checksum }}"
+    checksum: "sha256:{{ prometheus_checksum }}" if prometheus_checksum else omit
 
 - name: Extract Prometheus
   unarchive:
@@ -32,7 +43,7 @@
 
 - name: Create data directory
   file:
-    path: /var/lib/prometheus
+    path: "{{ prometheus_data_dir }}"
     state: directory
     owner: prometheus
     group: prometheus
@@ -43,11 +54,6 @@
     dest: /etc/systemd/system/prometheus.service
   notify: Reload systemd
 
-- name: Ensure Grafana GPG key
-  apt_key:
-    url: https://packages.grafana.com/gpg.key
-    state: present
-
 - name: Add Grafana repository
   apt_repository:
     repo: "deb https://packages.grafana.com/oss/deb stable main"
@@ -56,18 +62,12 @@
 
 - name: Install Grafana
   apt:
-    name: grafana
-    state: latest
+    name: "grafana{{ '=' + grafana_version if grafana_version else '' }}"
+    state: present
     update_cache: yes
 
-- name: Start and enable Grafana
+- name: Start and enable services
   service:
-    name: grafana-server
-    state: started
-    enabled: yes
-
-- name: Ensure services are running
-  systemd:
     name: "{{ item }}"
     state: started
     enabled: yes

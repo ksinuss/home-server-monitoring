@@ -6,15 +6,15 @@
 [![Ansible](https://img.shields.io/badge/Ansible-EE0000?style=for-the-badge&logo=ansible&logoColor=white)](https://www.ansible.com/)
 
 ## Технологический стек
-| Категория       | Технологии/Компоненты               |
-|-----------------|-------------------------------------|
-| **ОС**            | Ubuntu Server 24.04.2 LTS             |
-| **Сеть**          | Netplan, iwd                          |
-| **Мониторинг**    | Prometheus 3.5.0, Node Exporter 1.9.1 |
-| **Визуализация**  | Grafana 10.4.1                        |
-| **Аналитика**     | PromQL-запросы                        |
-| **Управление**    | Systemd, Grafana CLI, SQLite          |
-| **Автоматизация** | Ansible 2.18.7                        |
+| Категория         | Технологии/Компоненты                  |
+|-------------------|----------------------------------------|
+| **ОС**            | Ubuntu Server 24.04.2 LTS              |
+| **Сеть**          | Netplan (systemd-networkd)             |
+| **Мониторинг**    | Prometheus 3.5.0, Node Exporter 1.9.1  |
+| **Визуализация**  | Grafana 10.4.1                         |
+| **Аналитика**     | PromQL-запросы                         |
+| **Управление**    | Systemd, Grafana CLI, SQLite           |
+| **Автоматизация** | Ansible 2.18.7                         |
 
 
 ## Установка Prometheus & Grafana с поддержкой версий

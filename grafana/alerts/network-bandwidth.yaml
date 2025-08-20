@@ -1,0 +1,24 @@
+apiVersion: 1
+groups:
+  - name: Bandwidth
+    interval: 1m
+    rules:
+      - alert: High Network In-Traffic
+        expr: rate(node_network_receive_bytes_total{device="wlp3s0"}[1m]) * 8 / 1e6 > 30
+        for: 3m
+        labels:
+          severity: warning
+          alert_channel: telegram
+          component: network
+        annotations:
+          summary: "High incoming network traffic"
+
+      - alert: High Network Out-Traffic
+        expr: rate(node_network_transmit_bytes_total{device="wlp3s0"}[1m]) * 8 / 1e6 > 20
+        for: 3m
+        labels:
+          severity: warning
+          alert_channel: telegram
+          component: network
+        annotations:
+          summary: "High outgoing network traffic"

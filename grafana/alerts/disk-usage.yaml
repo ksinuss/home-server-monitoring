@@ -1,0 +1,24 @@
+apiVersion: 1
+groups:
+  - name: Disk-Usage
+    interval: 5m
+    rules:
+      - alert: Warning Disk Space
+        expr: 100 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100) > 70
+        for: 15m
+        labels:
+          severity: warning
+          alert_channel: telegram
+          component: storage
+        annotations:
+          summary: "Disk usage exceeded threshold (is above 70%)"
+
+      - alert: Critical Disk Space
+        expr: 100 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100) > 90
+        for: 5m
+        labels:
+          severity: critical
+          alert_channel: telegram
+          component: storage
+        annotations:
+          summary: "Disk usage exceeded threshold (is above 90%)"

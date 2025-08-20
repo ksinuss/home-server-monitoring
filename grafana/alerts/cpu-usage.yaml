@@ -1,0 +1,24 @@
+apiVersion: 1
+groups:
+  - name: CPU-Usage
+    interval: 30s
+    rules:
+      - alert: High CPU Usage
+        expr: 100 - (avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[30s]))) * 100 > 80
+        for: 1m
+        labels:
+          severity: warning
+          alert_channel: telegram
+          component: cpu
+        annotations:
+          summary: "CPU load is above 80%"
+
+      - alert: CPU-Usage-Critical
+        expr: 100 - (avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[30s]))) * 100 > 95
+        for: 30s
+        labels:
+          severity: critical
+          alert_channel: telegram
+          component: cpu
+        annotations:
+          summary: "CPU load is above 95%"

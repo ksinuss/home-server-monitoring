@@ -1,0 +1,24 @@
+apiVersion: 1
+groups:
+  - name: Memory-Usage
+    interval: 1m
+    rules:
+      - alert: High Memory Usage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          alert_channel: telegram
+          component: memory
+        annotations:
+          summary: "Available memory is below 20%"
+
+      - alert: Critical Memory Usage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 90
+        for: 2m
+        labels:
+          severity: critical
+          alert_channel: telegram
+          component: memory
+        annotations:
+          summary: "Available memory is below 10%"

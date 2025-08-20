@@ -1,0 +1,26 @@
+apiVersion: 1
+groups:
+  - name: CPU-Temperature
+    interval: 2m
+    rules:
+      - alert: High CPU Temperature
+        expr: node_hwmon_temp_celsius{instance="192.168.0.100:9100",job="node_exporter"} * on(chip) group_left(chip_name) node_hwmon_chip_names{instance="192.168.0.100:9100",job="node_exporter"} > 70
+        for: 5m
+        labels:
+          severity: warning
+          alert_channel: telegram
+          component: cpu
+          subcomponent: temperature
+        annotations:
+          summary: "CPU temperature is above 70°C"
+
+      - alert: Critical CPU Temperature
+        expr: node_hwmon_temp_celsius{instance="192.168.0.100:9100",job="node_exporter"} * on(chip) group_left(chip_name) node_hwmon_chip_names{instance="192.168.0.100:9100",job="node_exporter"} > 85
+        for: 3m
+        labels:
+          severity: critical
+          alert_channel: telegram
+          component: cpu
+          subcomponent: temperature
+        annotations:
+          summary: "CPU temperature is above 85°C"

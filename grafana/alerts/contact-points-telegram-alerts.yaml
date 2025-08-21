@@ -1,0 +1,16 @@
+apiVersion: 1
+contactPoints:
+    - orgId: 1
+      name: Telegram-Alerts
+      receivers:
+        - uid: ""
+          type: telegram
+          settings:
+            bottoken: ""
+            chatid: ""
+            disable_notification: false
+            disable_web_page_preview: false
+            message: "{{ range .Alerts }}\n{{ if eq .Status \"firing\" }}\U0001F6A8{{ else }}✅{{ end }} *{{ .Labels.alertname }}*\n{{ if .Labels.instance }}\U0001F4BB Host: `{{ .Labels.instance }}`{{ end }}\n{{ if .Labels.job }}\U0001F527 Service: `{{ .Labels.job }}`\n{{ end }}\n\n{{- if eq .Labels.alertname \"Critical Disk Space\" }}\U0001F4C1 Partition: `{{ .Labels.mountpoint }}`\n\U0001F4CA Usage: *{{ index .Values \"B\" | printf \"%.2f\" }}%*\n{{- else if eq .Labels.alertname \"Warning Disk Space\" -}}\U0001F4C1 Partition: `{{ .Labels.mountpoint }}`\n\U0001F4CA Usage: *{{ index .Values \"B\" | printf \"%.2f\" }}%*\n{{- else if eq .Labels.alertname \"High CPU Usage\" -}}\U0001F4CA Load: *{{ index .Values \"B\" | printf \"%.2f\" }}%*\n{{- else if eq .Labels.alertname \"Critical CPU Usage\" -}}\U0001F4CA Load: *{{ index .Values \"B\" | printf \"%.2f\" }}%*\n{{- else if eq .Labels.alertname \"High CPU Temperature\" -}}\U0001F321️ Temperature: *{{ index .Values \"B\" | printf \"%.2f\" }}°C*\n{{- else if eq .Labels.alertname \"Critical CPU Temperature\" -}}\U0001F321️ Temperature: *{{ index .Values \"B\" | printf \"%.2f\" }}°C*\n{{- else if eq .Labels.alertname \"High Memory Usage\" -}}\U0001F4CA Usage: *{{ index .Values \"B\" | printf \"%.2f\" }}%*\n{{- else if eq .Labels.alertname \"Critical Memory Usage\" -}}\U0001F4CA Usage: *{{ index .Values \"B\" | printf \"%.2f\" }}%*\n{{- else if eq .Labels.alertname \"High Network In-Traffic\" -}}\U0001F4F6 In: *{{ index .Values \"B\" | printf \"%.2f\" }}Mbps*\n{{- else if eq .Labels.alertname \"High Network Out-Traffic\" -}}\U0001F4F6 Out: *{{ index .Values \"B\" | printf \"%.2f\" }}Mbps*\n{{- else if eq .Labels.alertname \"Node Exporter Down\" -}}❌ Service is {{ if eq .Status \"firing\" }}*down*{{ else }}*up*{{ end }} \n{{ end -}}\n\n{{ if .Annotations.summary }}⚠️ {{ .Annotations.summary }}{{ end }}\n\U0001F552 Started: {{ .StartsAt.Format \"15:04 | 02 Jan\" }}\n{{ end }}"
+            parse_mode: Markdown
+            protect_content: false
+          disableResolveMessage: false

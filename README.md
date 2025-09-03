@@ -68,120 +68,108 @@ graph TD
     J --> K
 ```
 
----
+## Детализация компонентов
 
-## Установка Prometheus & Grafana с поддержкой версий
+### 1. Автоматизация развертывания (Ansible)
 
-Скрипты установки поддерживают несколько режимов работы с версиями:
+**Роль:** Оркестрация всего процесса установки и настройки
 
-### 1. Установка стабильной версии (по умолчанию)
+| Компонент | Назначение | Ключевые особенности |
+| --------- | ---------- | -------------------- |
+| **Роль `base_setup`**  | Базовая настройка сервера | Установка пакетов, настройка времени, обновление системы |
+| **Инвентарь**          | Управление хостами        | INI-формат с групповыми переменными                      |
+| **Плейбуки**           | Автоматизация задач       | Обработка ошибок                                         |
+
+**Реализованные функции:**
+- Автоматическая настройка SSH (отключение парольной аутентификации)
+- Установка базовых утилит мониторинга (htop, net-tools)
+- Настройка часового пояса и синхронизация времени
+- Обновление системы и установка зависимостей
+
+### 2. Мониторинг (Prometheus + Node Exporter)
+
+**Роль:** Сбор и хранение метрик
+
+**Установка с поддержкой версий:**
 ```bash
-# Prometheus
+# Установка стабильной версии
 ./install-prometheus.sh
-
-# Node Exporter
 ./install-node-exporter.sh
-```
 
-### 2. Установка последней версии
-```bash
-# Prometheus
+# Установка конкретной версии
+./install-prometheus.sh 2.51.2
+./install-node-exporter.sh 1.7.0
+
+# Установка последней версии
 ./install-prometheus.sh latest
-
-# Node Exporter
 ./install-node-exporter.sh latest
 ```
 
-### 3. Установка конкретной версии
-```bash
-# Prometheus v3.0.0
-./install-prometheus.sh 3.0.0
+**Собираемые метрики:**
+- **Системные:** CPU, memory, disk usage, network traffic
+- **Аппаратные:** Temperature, fan speed, power supply
+- **Сервисы:** Service status, port availability
 
-# Node Exporter v1.5.0
-./install-node-exporter.sh 1.5.0
-```
+### 3. Визуализация (Grafana)
 
-### Основные функции
-- Сбор системных метрик (CPU, RAM, Disk, Network)
-- Мониторинг состояния сервера в реальном времени
-- Готовые конфиги для быстрого развертывания
+**Роль:** Представление данных и управление оповещениями
 
-## Grafana Setup & Dashboard Management
+**Особенности реализации:**
+- Автоматическая установка с настроенным Prometheus datasource
+- Provisioning конфигов через YAML-файлы
+- Резервное копирование дашбордов (JSON + SQLite)
+- Кастомные дашборды с расширенными запросами PromQL
 
-### 1. Install Grafana
-```bash
-./install-grafana.sh
-```
-
-### 2. First Access
-- URL: `http://your-server-ip:3000`
-- Default login/password: `admin/admin` (change)
-
-### 3. Import Dashboards
-#### From Grafana.com:
-1. By ID (for example 1860 for Node Exporter Full)
-2. In Grafana: Create → Import → Enter ID → Load
-3. Select Prometheus datasource → Import
-
-### 4. Create Custom Dashboard
-1. **Add visualization** → Select data source (prometheus)
-2. **Write PromQL** → Set options → Apply
-3. **Settings** → Save dashboard
-
-#### (For example, PromQL) Temperature Monitoring
+**Пример PromQL запросов:**
 ```promql
+# Мониторинг температуры CPU
 node_hwmon_temp_celsius{chip="coretemp-*"}  # Intel
 node_hwmon_temp_celsius{chip="k10temp*"}    # AMD
+
+# Использование памяти
+100 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100)
 ```
 
-### 5. Backup Dashboards
-1. Export all dashboards
-```bash
-sudo cp /var/lib/grafana/grafana.db ~/grafana-backup.db
-```
-2. Exporting dashboards to JSON files
-```bash
-# Installing library to work with db
-sudo apt install -y sqlite3
+### 4. Алертинг (Alertmanager + Telegram Bot)
 
-# Folder for json files
-mkdir -p ~/grafana-export
+**Роль:** Уведомления о проблемах
 
-for uid in $(sqlite3 ~/grafana-backup.db "SELECT uid FROM dashboard"); do data=$(sqlite3 ~/grafana-backup.db "SELECT data FROM dashboard WHERE uid = '$uid'"); echo "$data" > ~/grafana-export/"${uid}".json; done
-```
+**Реализованные алерты:**
+- `Critical Disk Space`
+- `High CPU Usage`
+- `Low Available Memory`
+- `Node Exporter Down`
+- `High Temperature`
 
+### Процесс развертывания
 
-## Автоматизация базовой настройки серверов с помощью Ansible
+1. **Инициализация:**
+   ```bash
+   ./setup.sh
+   ```
 
-Реализована инфраструктура как код для автоматической настройки:
-- Базовой конфигурации Ubuntu серверов
-- Установки необходимых пакетов
-- Настройки безопасности SSH
-- Обновления системы
+2. **Запуск автоматизации:**
+   ```bash
+   ansible-playbook playbooks/site.yml -K 
+   ```
 
-### Компоненты:
-1. Роль `base_setup`:
-   - Установка базовых пакетов (htop, net-tools, curl и др.)
-   - Настройка часового пояса (Europe/Moscow)
-   - Конфигурация SSH (отключение парольной аутентификации)
-   - Добавление SSH-ключа для доступа
-   - Обновление всех пакетов системы
+3. **Верификация:**
+   - Проверка доступности Prometheus: `http://server:9090`
+   - Проверка метрик Node Exporter: `http://server:9100/metrics`
+   - Проверка Grafana: `http://server:3000` (admin/admin)
 
-2. Структура проекта:
-   - Инвентарь в формате INI
-   - Разделение на роли и плейбуки
-   - Централизованное управление переменными
-   - Все чувствительные данные хранятся локально
+4. **Настройка уведомлений:**
+   - Добавление Telegram bot token и chat ID
+   - Настройка каналов уведомлений в Grafana
+   - Тестирование алертов
 
-### Установка
-#### 1. Запустите интерактивную настройку
-```bash
-./setup.sh
-```
-#### 2. Запустите плейбук
-```bash
-ansible-playbook playbooks/site.yml -K
-```
+### Ключевые особенности реализации
+
+- **Версионность:** Поддержка установки specific версий компонентов
+- **Безопасность:** Настройка SSH, отключение парольной аутентификации
+- **Документирование:** Подробное описание проблем и решений
+
+Этот стек технологий представляет собой production-ready решение для мониторинга, которое можно масштабировать на несколько серверов и адаптировать под конкретные задачи наблюдения за инфраструктурой.
 
 ---
 

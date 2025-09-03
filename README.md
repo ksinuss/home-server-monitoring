@@ -42,16 +42,30 @@
 | **Управление**    | Systemd, Grafana CLI, SQLite           |
 | **Автоматизация** | Ansible 2.18.7                         |
 
-## Архитектура, Системный дизайн
+## Архитектура решения
 ```mermaid
 graph TD
-    A[Server Hardware] --> B(Node Exporter)
-    B --> C(Prometheus)
-    C --> D{Grafana}
-    D --> E[Visualization]
-    C --> F[Alertmanager]
-    F --> G[Telegram Bot API]
-    I[Ansible] --> J[Automated Provisioning]
+    A[Ansible Automation] --> B[Ubuntu Server Provisioning]
+    B --> C[Prometheus Stack Installation]
+    C --> D[Grafana Deployment]
+    D --> E[Dashboards & Alerting Setup]
+    E --> F[Telegram Notifications]
+    
+    subgraph "Data Collection"
+        G[Node Exporter]
+        H[Prometheus Server]
+    end
+    
+    subgraph "Visualization & Alerting"
+        I[Grafana Dashboards]
+        J[Alertmanager]
+        K[Telegram Bot]
+    end
+    
+    G --> H
+    H --> I
+    H --> J
+    J --> K
 ```
 
 ---

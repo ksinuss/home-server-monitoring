@@ -1,11 +1,37 @@
-# Home SRE Monitoring Project
+# HomeLab SRE Monitoring & Automation
 
+[![Ubuntu](https://img.shields.io/badge/Ubuntu-E86341?style=for-the-badge&logo=ubuntu&logoColor=white)](https://ubuntu.com/)
 [![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)](https://prometheus.io/)
 [![Node Exporter](https://img.shields.io/badge/Node_Exporter-FDBC02?style=for-the-badge&logo=prometheus&logoColor=white)](https://github.com/prometheus/node_exporter)
 [![Grafana](https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=F46800&color=white)](https://grafana.com)
 [![Ansible](https://img.shields.io/badge/Ansible-EE0000?style=for-the-badge&logo=ansible&logoColor=white)](https://www.ansible.com/)
 
+## Проблема и Мотивация
+
+Этот проект начался с критических проблем старого ноутбука **Acer Aspire E5-551G**:
+
+-   **Циклические перезагрузки** и отказы запуска системы
+-   **Постоянная 100% нагрузка** диска (HDD) даже в простое
+-   **Перегрев и шумная работа** из-за постоянной высокой нагрузки
+-   **Подозрение на скрытые угрозы** (майнеры, вирусы)
+
+Диагностика выявила главную причину: **физическая смерть HDD** с битыми секторами.
+
+**Решение:**
+Вместо утилизации было принято стратегическое решение:
+1.  **Апгрейд железа:** Замена HDD на современный SSD (Samsung 870 EVO)
+2.  **Трансформация:** Перепрофилирование ноутбука в **энергоэффективный домашний сервер** 24/7
+3.  **Практическое обучение:** Создание полигона для освоения Linux, сетей и DevOps-инструментов
+4.  **Создание инфраструктуры:** Построение основы для файлового хранилища, хостинга пет-проектов и автоматизации
+
+Проект стал инвестицией в экспертизу: от решения аппаратных проблем до построения отказоустойчивых систем.
+
+---
+
 ## Технологический стек
+
+Для превращения проблемного hardware в предсказуемую и управляемую систему был развернут полноценный стек мониторинга и автоматизации.
+
 | Категория         | Технологии/Компоненты                  |
 |-------------------|----------------------------------------|
 | **ОС**            | Ubuntu Server 24.04.2 LTS              |
@@ -16,6 +42,19 @@
 | **Управление**    | Systemd, Grafana CLI, SQLite           |
 | **Автоматизация** | Ansible 2.18.7                         |
 
+## Архитектура, Системный дизайн
+```mermaid
+graph TD
+    A[Server Hardware] --> B(Node Exporter)
+    B --> C(Prometheus)
+    C --> D{Grafana}
+    D --> E[Visualization]
+    C --> F[Alertmanager]
+    F --> G[Telegram Bot API]
+    I[Ansible] --> J[Automated Provisioning]
+```
+
+---
 
 ## Установка Prometheus & Grafana с поддержкой версий
 
@@ -125,8 +164,31 @@ for uid in $(sqlite3 ~/grafana-backup.db "SELECT uid FROM dashboard"); do data=$
 ```bash
 ./setup.sh
 ```
-
 #### 2. Запустите плейбук
 ```bash
 ansible-playbook playbooks/site.yml -K
 ```
+
+---
+
+## Результаты
+
+### До внедрения
+- Реактивное реагирование на инциденты
+- Время простоя: **5+ часа** на восстановление
+- Постоянный ручной мониторинг состояния
+
+### После внедрения
+- **Проактивное** предупреждение проблем
+- **Время восстановления: < 5 минут**
+- **Автоматическое развертывание** всей системы через Ansible
+- **Единая точка мониторинга** всех компонентов
+
+**Выводы:** Проект доказал, что принципы SRE применимы на любом масштабе инфраструктуры и значительно повышают её надежность.
+
+## Будущее развитие проекта
+
+- [ ] **Миграция на Kubernetes** для оркестрации сервисов
+- [ ] **Добавление Loki** для централизованного логирования
+- [ ] **Реализация мониторинга сети** (ping, трафик, QoS)
+- [ ] **Настройка резервного копирования** настроек и данных
